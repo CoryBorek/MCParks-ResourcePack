@@ -43,7 +43,7 @@ jobs:
           link=($(pastebinit -i errors.txt))
           wc 256_errors.txt > err_1
           read lines words characters filename < err_1 
-          errors = $lines + 0
+          errors=$lines+0
           curl -X POST -H "Content-Type: application/json" -d '{"username": "Resource Pack Test", "content": "There are $errors errors in the pack. Link: $link"}' $DISCORD_URL
           
           
