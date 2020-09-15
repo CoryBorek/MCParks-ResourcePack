@@ -30,4 +30,4 @@ jobs:
           sudo apt install libimage-exiftool-perl;
           exiftool -q -r -ext png -if '$ImageHeight > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> test.txt;
           echo Test Command. I have no clue if this will work.;
-          pastebinit -i test.txt -b https://pastebin.com;
+          pastebinit -i test.txt;
