@@ -38,7 +38,7 @@ jobs:
         env: 
           DISCORD_URL:  ${{ secrets.DISCORDWEBHOOK }}
         run: |
-          cat "==Images over 256x==\n" >> errors.txt
+          echo "==Images over 256x==\n" >> errors.txt
           cat 256_errors.txt >> errors.txt
           curl -i -H 'Expect: application/json' -F file=@errors.txt -F 'payload_json={ "wait": true, "content": "Here are some errors with this release.", "username": "Resource Pack Files" }' $DISCORD_URL
           
