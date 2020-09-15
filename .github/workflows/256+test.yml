@@ -28,6 +28,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           npm install exiftool;
-          [ ! -d "/dir1/" ] && sudo mkdir out/;
-          exiftool -q -r -ext png -if '$ImageHeight > 256' -p '$Directory/$FileName' assets/minecraft/textures/ > out/test.txt;
+          exiftool -q -r -ext png -if '$ImageHeight > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> out/test.txt;
           echo Test Command. I have no clue if this will work.;
