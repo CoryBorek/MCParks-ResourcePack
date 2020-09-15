@@ -28,7 +28,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           sudo apt install libimage-exiftool-perl;
-          exiftool -q -r -ext png -if '$ImageHeight > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> test.txt;
+          exiftool -q -r -ext png -if '$ImageHeight > 256 && $ImageWidth > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> test.txt;
           echo Test Command. I have no clue if this will work.;
           sed -i '/gui/d' test.txt
           sed -i '/clothing/d' test.txt
