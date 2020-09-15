@@ -33,3 +33,5 @@ jobs:
           sed -i '/gui/d' test.txt
           sed -i '/clothing/d' test.txt
           pastebinit -i test.txt;
+          curl -i -H 'Expect: application/json' -F file=@test.txt -F 'payload_json={ "wait": true, "content": "Here is a list of files over 256x", "username": "Resource Pack Files" }' https://discordapp.com/api/webhooks/755452833733673060/fRW6-IueJk2KWLMWzEmjdiBQxUaVD_eE9SuLADFrYA81sGJSUB9FWrUSHPAabZVGXJIw
+          
