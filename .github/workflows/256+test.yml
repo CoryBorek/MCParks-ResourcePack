@@ -25,15 +25,19 @@ jobs:
        # run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Get a list of files over 256x
+        run: |
+          sudo apt install libimage-exiftool-perl;
+          exiftool -q -r -ext png -if '$ImageHeight > 256 && $ImageWidth > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> 256_errors.txt;
+          echo Test Command. I have no clue if this will work.;
+          sed -i '/gui/d' 256_errors.txt
+          sed -i '/clothing/d' 256_errors.txt
+          pastebinit -i 256_errors.txt;
+          
+      - name: Send errors to Discord Webhook
         env: 
           DISCORD_URL:  ${{ secrets.DISCORDWEBHOOK }}
         run: |
-          sudo apt install libimage-exiftool-perl;
-          exiftool -q -r -ext png -if '$ImageHeight > 256 && $ImageWidth > 256' -p '$Directory/$FileName' assets/minecraft/textures/ >> test.txt;
-          echo Test Command. I have no clue if this will work.;
-          sed -i '/gui/d' test.txt
-          sed -i '/clothing/d' test.txt
-          pastebinit -i test.txt;
-          curl -i -H 'Expect: application/json' -F file=@test.txt -F 'payload_json={ "wait": true, "content": "Here is a list of files over 256x", "username": "Resource Pack Files" }' $DISCORD_URL
+          curl -i -H 'Expect: application/json' -F file=@256_errors.txt -F 'payload_json={ "wait": true, "content": "A push has been sent! Here's a list of errors!", "username": "Resource Pack Files" }' $DISCORD_URL
+          
           
