@@ -40,10 +40,10 @@ jobs:
         run: |
           echo "==Images over 256x==" >> errors.txt
           cat 256_errors.txt >> errors.txt
-          $LINK = ($(pastebinit -i errors.txt))
+          link=($(pastebinit -i errors.txt))
           wc 256_errors.txt > err_1
           read lines words characters filename < xxx 
           
-          curl -i -H 'Expect: application/json'-F 'payload_json={ "wait": true, "content": "There are $lines textures over 256x in this build. $LINK", "username": "Resource Pack Files" }' $DISCORD_URL
+          curl -i -H 'Expect: application/json'-F 'payload_json={ "wait": true, "content": "There are $lines textures over 256x in this build. $link", "username": "Resource Pack Files" }' $DISCORD_URL
           
           
