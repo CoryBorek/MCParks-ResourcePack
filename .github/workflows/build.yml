@@ -59,7 +59,7 @@ jobs:
           IMAGE_FTP_SERVER: ${{ secrets.IMAGE_FTP_SERVER}}
           IMAGE_FTP_PASSWORD: ${{ secrets.IMAGE_FTP_PASSWORD}}
         run: |
-          ftp -inv $IMAGE_FTP_SERVER << EOF
+          ftp -p -inv $IMAGE_FTP_SERVER << EOF
           user images $IMAGE_FTP_PASSWORD
           delete mcparkspack.zip
           delete mcparkspack1-13.zip
