@@ -1,0 +1,86 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ release ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  setup:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+
+      # Runs a set of commands using the runners shell
+      - name: Setup
+        run: |
+          mkdir scripts
+          git clone https://github.com/MCParks/ResourcePackConverter scripts/ResourcePackConverter
+          cd scripts/ResourcePackConverter
+          mvn -B package --file pom.xml
+          cd ../
+          mv ResourcePackConverter/target/ResourcePackConverter.jar ResourcePackConverter.jar
+          cd ../
+      - name: 1.12 Build
+        run: |
+          zip -r mcparkspack.zip assets pack.mcmeta pack.png;
+          echo 1.12 Build Complete!
+      - name: 1.13 conversion
+        run: |
+          mkdir convert
+          cp mcparkspack.zip convert/mcparkspack.zip
+          echo Converting to 1.13...
+          java -jar scripts/ResourcePackConverter.jar --input convert --to 1.13
+          mv convert/mcparkspack_converted.zip mcparkspack1-13.zip
+          rm -rf convert;
+      - name: 1.15 conversion
+        run: |
+          mkdir convert
+          cp mcparkspack.zip convert/mcparkspack.zip
+          echo Converting to 1.15...
+          java -jar scripts/ResourcePackConverter.jar --input convert --to 1.15
+          mv convert/mcparkspack_converted.zip mcparkspack1-15.zip
+          rm -rf convert;
+      - name: File Upload
+        env: 
+          IMAGE_FTP_SERVER: ${{ secrets.IMAGE_FTP_SERVER}}
+          IMAGE_FTP_PASSWORD: ${{ secrets.IMAGE_FTP_PASSWORD}}
+        run: |
+          ftp -inv $IMAGE_FTP_SERVER << EOF
+          user images $IMAGE_FTP_PASSWORD
+          put mcparkspack.zip
+          put mcparkspack1-13.zip
+          put mcparkspack1-15.zip
+          bye
+          EOF
+     # - name: Reload ForceResourcePacks on Bungee
+      #  run: |
+       #   curl "http://$PANEL_URL/api/client/servers/$BUNGEE_SERVER_ID/command" \
+        #  -H "Authorization: Bearer $PANEL_API_AUTH" \
+         # -H "Content-Type: application/json" \
+         # -H "Accept: Application/vnd.pterodactyl.v1+json" \
+         # -X POST \
+         # -d '{ "command": "frp reload" }'
+         # sleep 2s;  
+         # curl "http://$PANEL_URL/api/client/servers/$BUNGEE_SERVER_ID/command" \
+         # -H "Authorization: Bearer $PANEL_API_AUTH" \
+         # -H "Content-Type: application/json" \
+         # -H "Accept: Application/vnd.pterodactyl.v1+json" \
+         # -X POST \
+         # -d '{ "command": "frp generatehashes" }' 
+        
+          
+          
